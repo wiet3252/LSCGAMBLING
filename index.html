@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,10 +32,8 @@
         }
     </style>
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <!-- Netlify Identity for future authentication -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -62,12 +61,13 @@
             </div>
             <h2>Welcome Back</h2>
             <p class="subtitle">Sign in to access your account</p>
-            <form id="login-form">
+            <form name="login" netlify>
+                <input type="hidden" name="form-name" value="login">
                 <div class="form-group">
-                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="text" name="username" id="username" placeholder="Username" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
                 </div>
                 <button type="submit" id="login-btn" class="btn-gradient">
                     <span class="btn-text">Login</span>
@@ -87,15 +87,19 @@
         <!-- Signup Form (Hidden by default) -->
         <div id="signup-container" class="form-container" style="display: none;">
             <h2>Create Account</h2>
-            <form id="signup-form">
+            <form name="signup" netlify>
+                <input type="hidden" name="form-name" value="signup">
                 <div class="form-group">
-                    <input type="text" id="new-username" placeholder="Choose Username" required>
+                    <input type="text" name="username" id="new-username" placeholder="Choose Username" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="new-password" placeholder="Choose Password" required>
+                    <input type="email" name="email" id="email" placeholder="Email" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+                    <input type="password" name="password" id="new-password" placeholder="Choose Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm Password" required>
                 </div>
                 <button type="submit" id="signup-btn">
                     <span class="btn-text">Sign Up</span>
@@ -204,30 +208,53 @@
 
     <!-- Particles.js -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script type="module">
-        // Firebase configuration will be injected here by the build process
-        // or you can manually add it after setting up your Firebase project
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-        
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        
+    <script>
+        // Simple form handling for Netlify
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle form submissions
+            const loginForm = document.querySelector('form[name="login"]');
+            const signupForm = document.querySelector('form[name="signup"]');
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    // Add any client-side validation here
+                    console.log('Login form submitted');
+                });
+            }
+
+            if (signupForm) {
+                signupForm.addEventListener('submit', (e) => {
+                    const password = document.getElementById('new-password').value;
+                    const confirmPassword = document.getElementById('confirm-password').value;
+                    
+                    if (password !== confirmPassword) {
+                        e.preventDefault();
+                        alert('Passwords do not match!');
+                        return false;
+                    }
+                    console.log('Signup form submitted');
+                    return true;
+                });
+            }
+
+            // Initialize Netlify Identity (for future use)
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.on('init', user => {
+                    if (!user) {
+                        window.netlifyIdentity.on('login', () => {
+                            document.location.href = '/dashboard/';
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
         // Import and initialize other modules
-        import { initializeAuth } from './js/auth.js';
         import { initializeGames } from './js/game.js';
         
-        // Initialize auth and games when DOM is loaded
-        document.addEventListener('DOMContentLoaded', async () => {
+        // Initialize games when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
             await initializeAuth();
             initializeGames();
         });
