@@ -1,11 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/omaromar242/Esp/refs/heads/main/Esp"))()
-
-loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-
---[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
-]]
-loadstring(game:HttpGet('https://raw.githubusercontent.com/MassiveHubs/loadstring/refs/heads/main/DexXenoAndRezware'))()
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
