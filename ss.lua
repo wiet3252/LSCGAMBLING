@@ -7,16 +7,11 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/
 ]]
 loadstring(game:HttpGet('https://raw.githubusercontent.com/MassiveHubs/loadstring/refs/heads/main/DexXenoAndRezware'))()
 
--- LocalScript (StarterPlayerScripts)
--- Toggle button (top-right) that makes all world parts non-collidable once.
--- No constant loop = no lag. Does NOT affect your character.
-
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 
 local player = Players.LocalPlayer
 
--- GUI setup
 local gui = Instance.new("ScreenGui")
 gui.Name = "WorldNoclipGui"
 gui.ResetOnSpawn = false
@@ -25,7 +20,7 @@ gui.Parent = player:WaitForChild("PlayerGui")
 local button = Instance.new("TextButton")
 button.Name = "ToggleWorldNoclip"
 button.Size = UDim2.new(0, 160, 0, 40)
-button.Position = UDim2.new(1, -180, 0, 20) -- top-right corner
+button.Position = UDim2.new(1, -180, 0, 20) 
 button.AnchorPoint = Vector2.new(0, 0)
 button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
 button.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -33,10 +28,8 @@ button.TextSize = 18
 button.Text = "World Noclip: OFF"
 button.Parent = gui
 
--- State
 local enabled = false
 
--- Helper: flip parts (ignoring player character)
 local function affectWorld(on)
 for _, part in ipairs(Workspace:GetDescendants()) do
 if part:IsA("BasePart") then
@@ -49,7 +42,6 @@ end
 end
 end
 
--- Toggle
 button.MouseButton1Click:Connect(function()
 enabled = not enabled
 if enabled then
@@ -63,7 +55,6 @@ button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
 end
 end)
 
--- Reset to OFF on spawn
 player.CharacterAdded:Connect(function()
 if not enabled then
 affectWorld(false)
@@ -72,7 +63,6 @@ button.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
 end
 end)
 
--- Start OFF
 affectWorld(false)
 
 local FlyScript = {}
@@ -212,11 +202,9 @@ button.MouseButton1Click:Connect(function()
     local char = player.Character or player.CharacterAdded:Wait()
     local root = char:WaitForChild("HumanoidRootPart")
 
-    -- Teleport
     root.CFrame = CFrame.new(829, 2, 869)
     task.wait(0.25)
 
-    -- Execute the RemoteEvent
     local args = {
         "SpawnVehicle",
         "Van",
